@@ -102,17 +102,17 @@ public class NGramLMTest {
 		dict.addFromSentence(sent3, true);
 
 		final List<String> ngramL = Lists.newArrayList();
-		;
+
 		ngramL.add("h");
 		ngramL.add("a");
 		final NGram<String> ngram = new NGram<String>(ngramL);
-		assertEquals(dict.getMLProbabilityFor(ngram, false), 4. / 5., .001);
+		assertEquals(dict.getMLProbabilityFor(ngram, false), 5. / 6., .001);
 
 		final List<String> ngram2L = Lists.newArrayList();
 		ngram2L.add("h");
 		ngram2L.add("h");
 		final NGram<String> ngram2 = new NGram<String>(ngram2L);
-		assertEquals(dict.getMLProbabilityFor(ngram2, false), 1. / 5., .001);
+		assertEquals(dict.getMLProbabilityFor(ngram2, false), 1. / 6., .001);
 
 		final List<String> ngram3L = Lists.newArrayList();
 		ngram3L.add("h");
@@ -134,9 +134,9 @@ public class NGramLMTest {
 		final AbstractNGramLM dictD = (AbstractNGramLM) (new JavaSerialization())
 				.deserializeFrom(serialized);
 
-		assertEquals(dictD.getMLProbabilityFor(ngram, false), 4. / 5., .001);
+		assertEquals(dictD.getMLProbabilityFor(ngram, false), 5. / 6., .001);
 
-		assertEquals(dictD.getMLProbabilityFor(ngram2, false), 1. / 5., .001);
+		assertEquals(dictD.getMLProbabilityFor(ngram2, false), 1. / 6., .001);
 
 		assertEquals(dictD.getMLProbabilityFor(ngram3, false), 1. / 3., .001);
 
@@ -146,9 +146,9 @@ public class NGramLMTest {
 		final AbstractNGramLM dictE = (AbstractNGramLM) (new KryoSerialization())
 				.deserializeFrom(serialized2);
 
-		assertEquals(dictE.getMLProbabilityFor(ngram, false), 4. / 5., .001);
+		assertEquals(dictE.getMLProbabilityFor(ngram, false), 5. / 6., .001);
 
-		assertEquals(dictE.getMLProbabilityFor(ngram2, false), 1. / 5., .001);
+		assertEquals(dictE.getMLProbabilityFor(ngram2, false), 1. / 6., .001);
 
 		assertEquals(dictE.getMLProbabilityFor(ngram3, false), 1. / 3., .001);
 
