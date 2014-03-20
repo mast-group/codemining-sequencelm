@@ -13,7 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import codemining.js.codeutils.JavaCodePrinter;
+import codemining.java.codeutils.JavaCodePrinter;
 import codemining.languagetools.ITokenizer;
 import codemining.lm.ngram.AbstractNGramLM;
 import codemining.lm.ngram.NGram;
@@ -30,7 +30,46 @@ public class HeatmapVizualizer extends JavaCodePrinter {
 	private static final Logger LOGGER = Logger
 			.getLogger(HeatmapVizualizer.class.getName());
 
-	private static List<ColoredToken> colorTokens(final AbstractNGramLM lm,
+	/**
+	 * @param args
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws SerializationException
+	 */
+	public static void main(final String[] args) throws ClassNotFoundException,
+			SerializationException {
+		if (args.length != 3) {
+			System.err.println("Usage <fileDir> <lmModel>");
+			return;
+		}
+
+		final AbstractNGramLM lm = AbstractNGramLM.readFromSerialized(args[1]);
+		final HeatmapVizualizer visualizer = new HeatmapVizualizer(
+				lm.getTokenizer(), new Color(200f / 255, 200f / 255, 1));
+		for (final File f : FileUtils.listFiles(new File(args[0]),
+				lm.modelledFilesFilter(), DirectoryFileFilter.DIRECTORY)) {
+			try {
+				final List<ColoredToken> coloredTokens = visualizer
+						.colorTokens(lm, f);
+				visualizer.writeHTMLwithColors(coloredTokens, f); // TODO write
+																	// it
+																	// somewhere
+																	// (get
+																	// params
+																	// from
+																	// args)
+			} catch (final Exception e) {
+				LOGGER.warning(ExceptionUtils.getFullStackTrace(e));
+			}
+		}
+
+	}
+
+	private HeatmapVizualizer(final ITokenizer tokenizer, final Color bgColor) {
+		super(tokenizer, bgColor);
+	}
+
+	private List<ColoredToken> colorTokens(final AbstractNGramLM lm,
 			final File f) throws IOException {
 		final ITokenizer tokenizer = lm.getTokenizer();
 		final List<String> tokenList = tokenizer.tokenListFromCode(FileUtils
@@ -66,31 +105,5 @@ public class HeatmapVizualizer extends JavaCodePrinter {
 		}
 
 		return coloredTokens;
-	}
-
-	/**
-	 * @param args
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 * @throws SerializationException
-	 */
-	public static void main(final String[] args) throws ClassNotFoundException,
-			SerializationException {
-		if (args.length != 3) {
-			System.err.println("Usage <fileDir> <lmModel> <tokenizerClass>");
-			return;
-		}
-
-		final AbstractNGramLM lm = AbstractNGramLM.readFromSerialized(args[1]);
-		for (final File f : FileUtils.listFiles(new File(args[0]),
-				lm.modelledFilesFilter(), DirectoryFileFilter.DIRECTORY)) {
-			try {
-				final List<ColoredToken> coloredTokens = colorTokens(lm, f);
-				writeHTMLwithColors(coloredTokens, f);
-			} catch (final Exception e) {
-				LOGGER.warning(ExceptionUtils.getFullStackTrace(e));
-			}
-		}
-
 	}
 }
