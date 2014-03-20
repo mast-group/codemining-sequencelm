@@ -1,6 +1,8 @@
 package codemining.lm.ngram;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -116,6 +118,18 @@ public class TrieTest {
 
 		assertEquals(testTrie.getCount(testList2, true, true), 3);
 		assertEquals(testTrie.getCount(testList2, false, true), 3);
+
+		testTrie.remove(testList2);
+		assertEquals(testTrie.getCount(testList1, true, true), 2);
+		assertEquals(testTrie.getCount(testList1, false, true), 2);
+
+		testTrie.remove(testList1);
+		assertEquals(testTrie.getCount(testList1, true, true), 1);
+		assertEquals(testTrie.getCount(testList1, false, true), 1);
+
+		testTrie.remove(testList1);
+		assertEquals(testTrie.getCount(testList1, true, true), 0);
+		assertEquals(testTrie.getCount(testList1, false, true), 0);
 	}
 
 	@Test
@@ -163,6 +177,13 @@ public class TrieTest {
 		assertEquals(testTrie.getCount(testPrefix, false, true), 1);
 		assertEquals(testTrie.getCount(testPrefix, true, false), 0);
 		assertEquals(testTrie.getCount(testPrefix, false, false), 0);
+
+		// Now remove and everything should be zero
+		testTrie.remove(testList1);
+		assertEquals(testTrie.getCount(testPrefix, true, true), 0);
+		assertEquals(testTrie.getCount(testPrefix, false, true), 0);
+		assertEquals(testTrie.getCount(testPrefix, true, false), 0);
+		assertEquals(testTrie.getCount(testPrefix, false, false), 0);
 	}
 
 	@Test
@@ -199,6 +220,24 @@ public class TrieTest {
 		assertEquals(testTrie.getCount(testPrefix, false, true), 1);
 		assertEquals(testTrie.getCount(testPrefix, true, false), 0);
 		assertEquals(testTrie.getCount(testPrefix, false, false), 0);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testRemoveException() {
+		// Add the same ngram many times and test that it still works
+		final Trie<String> testTrie = new Trie<String>("UNK");
+		testTrie.add(testList1);
+		testTrie.add(testList1);
+		testTrie.add(testList2);
+
+		testTrie.remove(testList2);
+
+		testTrie.remove(testList1);
+
+		testTrie.remove(testList1);
+		assertTrue(true);
+		testTrie.remove(testList1);
+		fail("Should never reach this point. Previous statement should through exception");
 	}
 
 	@Test

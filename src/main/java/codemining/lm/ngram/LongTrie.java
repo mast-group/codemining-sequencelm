@@ -193,6 +193,24 @@ public class LongTrie<K> extends Trie<Long> {
 	}
 
 	/**
+	 * Remove an n-gram from the trie. The n-gram must exist.
+	 * 
+	 * @param ngram
+	 */
+	public void remove(final NGram<K> ngram) {
+		final List<Long> keys = getSymbolIds(ngram, false);
+
+		// replace nulls with unks
+		for (int i = 0; i < keys.size(); i++) {
+			if (keys.get(i) == null) {
+				keys.set(i, this.getUnkSymbolId());
+			}
+		}
+
+		remove(keys);
+	}
+
+	/**
 	 * Substitute all the tokens in the current ngram with UNK when they do not
 	 * exist in the dictionary.
 	 * 

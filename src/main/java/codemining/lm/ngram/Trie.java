@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.google.common.collect.Lists;
 
 /**
- * A trie of lists of T with an UNK symbol.
+ * A trie of lists of T with an UNK symbol. This implementation is thread-safe
+ * but only eventually consistent after edits (add/remove)
  * 
  * @author Miltiadis Allamanis <m.allamanis@ed.ac.uk>
  * 
@@ -21,46 +24,70 @@ import com.google.common.collect.Lists;
  */
 public class Trie<T extends Comparable<T>> implements Serializable {
 
+	/**
+	 * Struct class, representing the node of a trie.
+	 */
 	public static class TrieNode<T> implements Serializable {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = -3590197616044935851L;
+
 		/**
-		 * 
+		 * The children of this trie node
 		 */
 		public final SortedMap<T, TrieNode<T>> prods = new TreeMap<T, TrieNode<T>>();
-		public long count;
-		public long terminateHere;
+		public volatile long count;
+		public volatile long terminateHere;
 	}
 
 	private static final long serialVersionUID = 1365912094350571019L;
 
 	/**
+	 * A lock to allow editing of this trie.
+	 */
+	private final Lock editLock = new ReentrantLock();
+
+	/**
 	 * The dictionary is a trie of NGramUnits.
 	 */
-	private final TrieNode<T> root = new TrieNode<T>(); // TODO: init from
-														// constructor?
+	private final TrieNode<T> root = new TrieNode<T>();
+
 	protected T unkSymbolId;
 
 	public Trie(final T unk) {
 		unkSymbolId = unk;
 	}
 
-	public final synchronized void add(final List<T> elementSequence) {
-		root.count++;
-		TrieNode<T> currentUnit = root;
+	/**
+	 * 
+	 * @param elementSequence
+	 */
+	public final void add(final List<T> elementSequence) {
+		editLock.lock();
+		try {
+			root.count++;
+			TrieNode<T> currentUnit = root;
 
-		for (final T tokId : elementSequence) {
-			if (!currentUnit.prods.containsKey(tokId)) {
-				currentUnit.prods.put(tokId, new TrieNode<T>());
+			for (final T tokId : elementSequence) {
+				if (!currentUnit.prods.containsKey(tokId)) {
+					currentUnit.prods.put(tokId, new TrieNode<T>());
+				}
+				final TrieNode<T> next = currentUnit.prods.get(tokId);
+				next.count++;
+
+				currentUnit = next;
 			}
-			final TrieNode<T> next = currentUnit.prods.get(tokId);
-			next.count++;
-
-			currentUnit = next;
+			currentUnit.terminateHere++;
+		} finally {
+			editLock.unlock();
 		}
-		currentUnit.terminateHere++;
+	}
+
+	private final void checkCount(final TrieNode<T> node) {
+		if (node.count >= 0) {
+			return;
+		}
+		node.count = 0;
+		throw new IllegalStateException("Removed a non-existent sequence.");
 	}
 
 	/**
@@ -198,7 +225,7 @@ public class Trie<T extends Comparable<T>> implements Serializable {
 	 * @return
 	 */
 	public TrieNode<T> getTrieNodeForInput(final List<T> ngramSymbols,
-			final boolean useUNKs, TrieNode<T> startNode) {
+			final boolean useUNKs, final TrieNode<T> startNode) {
 		TrieNode<T> fromNode = startNode;
 		for (final T symbol : ngramSymbols) {
 			if (symbol != null && fromNode.prods.containsKey(symbol)) {
@@ -235,6 +262,32 @@ public class Trie<T extends Comparable<T>> implements Serializable {
 			} else {
 				to.prods.put(fromChild.getKey(), fromChild.getValue());
 			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param elementSequence
+	 */
+	public final void remove(final List<T> elementSequence) {
+		editLock.lock();
+		try {
+			root.count--;
+			checkCount(root);
+			TrieNode<T> currentUnit = root;
+
+			for (final T tokId : elementSequence) {
+				if (!currentUnit.prods.containsKey(tokId)) {
+					currentUnit.prods.put(tokId, new TrieNode<T>());
+				}
+				final TrieNode<T> next = currentUnit.prods.get(tokId);
+				next.count--;
+				checkCount(next);
+				currentUnit = next;
+			}
+			currentUnit.terminateHere--;
+		} finally {
+			editLock.unlock();
 		}
 	}
 

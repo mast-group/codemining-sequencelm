@@ -25,10 +25,11 @@ public class LongTrieTest {
 	/**
 	 * Test method for
 	 * {@link codemining.lm.ngram.LongTrie#add(codemining.lm.ngram.NGram, boolean)}
-	 * .
+	 * and
+	 * {@link codemining.lm.ngram.LongTrie#remove(codemining.lm.ngram.NGram)}
 	 */
 	@Test
-	public void testAddNGramOfKBoolean() {
+	public void testAddRemoveNGramOfKBoolean() {
 		final LongTrie<String> testTrie = new LongTrie<String>("UNK");
 		final List<String> snt = Lists.newArrayList();
 		snt.add("a");
@@ -62,6 +63,22 @@ public class LongTrieTest {
 		assertEquals(
 				testTrie.sumStartingWith(ng2.getPrefix().getPrefix(), true), 1);
 
+		// Now remove
+		testTrie.remove(ng2);
+		assertEquals(testTrie.sumStartingWith(ng.getPrefix(), false), 1);
+		assertEquals(testTrie.sumStartingWith(ng.getPrefix(), true), 1);
+		assertEquals(
+				testTrie.sumStartingWith(ng.getPrefix().getPrefix(), false), 1);
+		assertEquals(
+				testTrie.sumStartingWith(ng.getPrefix().getPrefix(), true), 1);
+
+		testTrie.remove(ng);
+		assertEquals(testTrie.sumStartingWith(ng.getPrefix(), false), 0);
+		assertEquals(testTrie.sumStartingWith(ng.getPrefix(), true), 0);
+		assertEquals(
+				testTrie.sumStartingWith(ng.getPrefix().getPrefix(), false), 0);
+		assertEquals(
+				testTrie.sumStartingWith(ng.getPrefix().getPrefix(), true), 0);
 	}
 
 	/**
