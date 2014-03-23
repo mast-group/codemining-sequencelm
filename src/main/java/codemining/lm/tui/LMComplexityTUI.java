@@ -54,9 +54,11 @@ public class LMComplexityTUI {
 				try {
 					final double crossEntropy = comp.getLanguageModel()
 							.getExtrinsticEntropy(f);
-					System.out
-							.println(f.getAbsolutePath() + " " + crossEntropy);
-				} catch (IOException e) {
+					final double entropy = comp.getLanguageModel()
+							.getAbsoluteEntropy(f);
+					System.out.println(f.getAbsolutePath() + "," + crossEntropy
+							+ "," + entropy);
+				} catch (final IOException e) {
 					LOGGER.warning(ExceptionUtils.getFullStackTrace(e));
 				}
 			}

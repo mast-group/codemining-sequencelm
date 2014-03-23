@@ -3,6 +3,8 @@
  */
 package codemining.lm.ngram;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -138,8 +140,11 @@ public class NGramLM extends AbstractNGramLM {
 	 * @param ngram
 	 */
 	@Override
-	protected void addNgramToDict(final NGram<String> ngram,
+	public void addNgramToDict(final NGram<String> ngram,
 			final boolean addNewVoc) {
+		checkArgument(ngram.size() > 0 && ngram.size() <= getN(),
+				"Adding a n-gram of size %s but we have a %s-gram",
+				ngram.size(), getN());
 		trie.add(ngram, addNewVoc);
 	}
 
