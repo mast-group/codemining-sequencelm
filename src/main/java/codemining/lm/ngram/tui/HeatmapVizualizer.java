@@ -14,6 +14,7 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import codemining.java.codeutils.JavaCodePrinter;
+import codemining.languagetools.ColoredToken;
 import codemining.languagetools.ITokenizer;
 import codemining.lm.ngram.AbstractNGramLM;
 import codemining.lm.ngram.NGram;
