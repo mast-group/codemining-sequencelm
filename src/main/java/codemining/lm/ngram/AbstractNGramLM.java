@@ -399,7 +399,7 @@ public abstract class AbstractNGramLM implements
 			}
 		}
 
-		return checkNotNull(null,
+		throw new IllegalStateException(
 				"Should never reach this point. Picking random production failed.");
 	}
 

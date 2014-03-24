@@ -35,8 +35,8 @@ public class Trie<T extends Comparable<T>> implements Serializable {
 		 * The children of this trie node
 		 */
 		public final SortedMap<T, TrieNode<T>> prods = new TreeMap<T, TrieNode<T>>();
-		public volatile long count;
-		public volatile long terminateHere;
+		public long count;
+		public long terminateHere;
 	}
 
 	private static final long serialVersionUID = 1365912094350571019L;

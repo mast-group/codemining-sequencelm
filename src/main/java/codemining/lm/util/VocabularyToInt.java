@@ -17,6 +17,7 @@ import codemining.languagetools.ITokenizer.FullToken;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.math.LongMath;
 
 /**
  * A utility class that helps convert a vocabulary of T and its respective
@@ -41,10 +42,6 @@ public class VocabularyToInt {
 	 */
 	private final BiMap<String, Integer> alphabet;
 
-	public BiMap<String, Integer> getAlphabet() {
-		return alphabet;
-	}
-
 	/**
 	 * 
 	 */
@@ -58,8 +55,8 @@ public class VocabularyToInt {
 	}
 
 	private synchronized void assignIdsToVocabulary(final Set<String> vocabulary) {
-		checkArgument(vocabulary.size() < ((long) (Integer.MAX_VALUE))
-				- Integer.MIN_VALUE,
+		checkArgument(vocabulary.size() < LongMath.checkedAdd(
+				Integer.MAX_VALUE, -Integer.MIN_VALUE),
 				"Too large vocabulary. It cannot fit in an int. Consider pruning more");
 		for (final String value : vocabulary) {
 			alphabet.put(value, nextId);
@@ -89,5 +86,9 @@ public class VocabularyToInt {
 	public int[] fileToIntSequence(final File file) throws IOException {
 		final String code = FileUtils.readFileToString(file);
 		return codeToIntSequence(code);
+	}
+
+	public BiMap<String, Integer> getAlphabet() {
+		return alphabet;
 	}
 }

@@ -124,7 +124,7 @@ public class IdentifierOnlyCachedNGramLM implements
 
 	final String identiferNameType;
 
-	public static int MAX_GENERATED_SENTENCE_LENGTH = 10000;
+	public static final int MAX_GENERATED_SENTENCE_LENGTH = 10000;
 
 	/**
 	 * A constructor that optimizes the parameters.
