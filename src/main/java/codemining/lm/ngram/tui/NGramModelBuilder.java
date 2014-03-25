@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 
 import codemining.languagetools.ITokenizer;
+import codemining.languagetools.TokenizerUtils;
 import codemining.lm.ngram.AbstractNGramLM;
 import codemining.lm.ngram.NGramLM;
 import codemining.util.serialization.ISerializationStrategy.SerializationException;
@@ -38,9 +39,7 @@ public class NGramModelBuilder {
 			return;
 		}
 
-		final Class<? extends ITokenizer> tokenizerName = (Class<? extends ITokenizer>) Class
-				.forName(args[3]);
-		final ITokenizer tokenizer = tokenizerName.newInstance();
+		final ITokenizer tokenizer = TokenizerUtils.tokenizerForClass(args[3]);
 
 		final NGramLM dict = new NGramLM(Integer.parseInt(args[1]), tokenizer);
 
