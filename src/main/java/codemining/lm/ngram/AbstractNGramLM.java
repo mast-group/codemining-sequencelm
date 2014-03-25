@@ -177,8 +177,7 @@ public abstract class AbstractNGramLM implements
 		final Multiset<String> namings = TreeMultiset.create();
 		final LongTrie<String> globalTrie = getTrie();
 
-		for (final com.google.common.collect.Multiset.Entry<NGram<String>> ngramEntry : ngrams
-				.entrySet()) {
+		for (final Multiset.Entry<NGram<String>> ngramEntry : ngrams.entrySet()) {
 			final NGram<String> ngram = ngramEntry.getElement();
 
 			final Set<String> renamings = checkNotNull(getAlternativesForNGram(
@@ -223,7 +222,7 @@ public abstract class AbstractNGramLM implements
 			final NGram<String> suffix = new NGram<String>(ngram,
 					prefixSize + 1, ngramSize);
 
-			for (final java.util.Map.Entry<Long, TrieNode<Long>> entry : sNode.prods
+			for (final Map.Entry<Long, TrieNode<Long>> entry : sNode.prods
 					.entrySet()) {
 				final String token = globalTrie
 						.getSymbolFromKey(entry.getKey());
