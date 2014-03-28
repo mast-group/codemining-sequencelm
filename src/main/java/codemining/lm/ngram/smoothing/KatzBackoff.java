@@ -62,20 +62,21 @@ public class KatzBackoff extends AbstractNGramLM {
 	}
 
 	@Override
-	public void addFromSentence(List<String> sentence, boolean addNewVoc) {
+	public void addFromSentence(final List<String> sentence,
+			final boolean addNewVoc) {
 		throw new UnsupportedOperationException(
 				"KatzSmoother is an immutable Language Model");
 	}
 
 	@Override
-	protected void addNgramToDict(NGram<String> ngram, boolean addNewVoc) {
+	protected void addNgram(final NGram<String> ngram, final boolean addNewVoc) {
 		throw new UnsupportedOperationException(
 				"KatzSmoother is an immutable Language Model");
 	}
 
 	@Override
-	public void addSentences(Collection<List<String>> sentenceSet,
-			boolean addNewVocabulary) {
+	public void addSentences(final Collection<List<String>> sentenceSet,
+			final boolean addNewVocabulary) {
 		throw new UnsupportedOperationException(
 				"KatzSmoother is an immutable Language Model");
 	}
@@ -221,7 +222,7 @@ public class KatzBackoff extends AbstractNGramLM {
 	}
 
 	@Override
-	public void cutoffRare(int threshold) {
+	public void cutoffRare(final int threshold) {
 		throw new UnsupportedOperationException(
 				"KatzSmoother is an immutable Language Model");
 	}
@@ -232,8 +233,9 @@ public class KatzBackoff extends AbstractNGramLM {
 	}
 
 	public double getKatzCount(final long originalCount, final int order) {
-		if (originalCount > NO_DISCOUNT_THRESHOLD)
+		if (originalCount > NO_DISCOUNT_THRESHOLD) {
 			return originalCount;
+		}
 
 		final Map<Long, Double> ngramKatzCount = checkNotNull(katzCounts
 				.get(order));
@@ -263,7 +265,7 @@ public class KatzBackoff extends AbstractNGramLM {
 			try {
 				final double gamma = computeGamma(ngram);
 				return gamma * getProbabilityFor(ngram.getSuffix());
-			} catch (IllegalArgumentException e) {
+			} catch (final IllegalArgumentException e) {
 				// back off to normal model since we failed at doing something
 				// (probably computing gamma)
 				LOGGER.warning("Failed to compute gamma, using 1 instead: "
@@ -287,8 +289,9 @@ public class KatzBackoff extends AbstractNGramLM {
 		final Long unkSymbolId = trie.getUnkSymbolId();
 
 		for (final Entry<Long, TrieNode<Long>> child : prefixU.prods.entrySet()) {
-			if (child.getKey().equals(unkSymbolId))
+			if (child.getKey().equals(unkSymbolId)) {
 				continue;
+			}
 			counts.add(child.getValue().count);
 		}
 
@@ -311,14 +314,20 @@ public class KatzBackoff extends AbstractNGramLM {
 	}
 
 	@Override
-	public void trainIncrementalModel(Collection<File> files)
+	protected void removeNgram(final NGram<String> ngram) {
+		throw new UnsupportedOperationException(
+				"KatzSmoother is an immutable Language Model");
+	}
+
+	@Override
+	public void trainIncrementalModel(final Collection<File> files)
 			throws IOException {
 		throw new UnsupportedOperationException(
 				"KatzSmoother is an immutable Language Model");
 	}
 
 	@Override
-	public void trainModel(Collection<File> files) throws IOException {
+	public void trainModel(final Collection<File> files) throws IOException {
 		throw new UnsupportedOperationException(
 				"KatzSmoother is an immutable Language Model");
 	}

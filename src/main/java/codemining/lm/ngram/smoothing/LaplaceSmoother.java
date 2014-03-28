@@ -15,31 +15,32 @@ public class LaplaceSmoother extends AbstractNGramLM {
 
 	private final double countIncrement = 1;
 
-	public LaplaceSmoother(AbstractNGramLM original) {
+	public LaplaceSmoother(final AbstractNGramLM original) {
 		super(original);
 	}
 
 	@Override
-	public void addFromSentence(List<String> sentence, boolean addNewVoc) {
+	public void addFromSentence(final List<String> sentence,
+			final boolean addNewVoc) {
 		throw new UnsupportedOperationException(
 				"LaplaceSmoother is an immutable Language Model");
 	}
 
 	@Override
-	protected void addNgramToDict(NGram<String> ngram, boolean addNewVoc) {
+	protected void addNgram(final NGram<String> ngram, final boolean addNewVoc) {
 		throw new UnsupportedOperationException(
 				"LaplaceSmoother is an immutable Language Model");
 	}
 
 	@Override
-	public void addSentences(Collection<List<String>> sentenceSet,
-			boolean addNewVocabulary) {
+	public void addSentences(final Collection<List<String>> sentenceSet,
+			final boolean addNewVocabulary) {
 		throw new UnsupportedOperationException(
 				"LaplaceSmoother is an immutable Language Model");
 	}
 
 	@Override
-	public void cutoffRare(int threshold) {
+	public void cutoffRare(final int threshold) {
 		throw new UnsupportedOperationException(
 				"LaplaceSmoother is an immutable Language Model");
 	}
@@ -63,6 +64,12 @@ public class LaplaceSmoother extends AbstractNGramLM {
 	}
 
 	@Override
+	protected void removeNgram(final NGram<String> ngram) {
+		throw new UnsupportedOperationException(
+				"LaplaceSmoother is an immutable Language Model");
+	}
+
+	@Override
 	public void trainIncrementalModel(final Collection<File> files)
 			throws IOException {
 		throw new UnsupportedOperationException(
@@ -70,7 +77,7 @@ public class LaplaceSmoother extends AbstractNGramLM {
 	}
 
 	@Override
-	public void trainModel(Collection<File> files) throws IOException {
+	public void trainModel(final Collection<File> files) throws IOException {
 		throw new UnsupportedOperationException(
 				"LaplaceSmoother is an immutable Language Model");
 	}

@@ -20,27 +20,29 @@ public class ImmutableNGramLM extends AbstractNGramLM {
 
 	private static final long serialVersionUID = -1774233421443065352L;
 
-	public ImmutableNGramLM(AbstractNGramLM originalDict) {
+	public ImmutableNGramLM(final AbstractNGramLM originalDict) {
 		super(originalDict);
 	}
 
 	@Override
-	public void addFromSentence(List<String> sentence, boolean addNewVoc) {
+	public void addFromSentence(final List<String> sentence,
+			final boolean addNewVoc) {
 		throw new UnsupportedOperationException(
 				"Cannot add sentence to ImmutableNGramDictionary");
 
 	}
 
 	@Override
-	protected void addNgramToDict(NGram<String> ngram, boolean addNewVoc) {
+	protected void addNgram(final NGram<String> ngram,
+			final boolean addNewVoc) {
 		throw new UnsupportedOperationException(
-				"Cannot add sentence to ImmutableNGramDictionary");
+				"Cannot add ngram to ImmutableNGramDictionary");
 
 	}
 
 	@Override
-	public void addSentences(Collection<List<String>> sentenceSet,
-			boolean addNewVocabulary) {
+	public void addSentences(final Collection<List<String>> sentenceSet,
+			final boolean addNewVocabulary) {
 		throw new UnsupportedOperationException(
 				"Cannot add sentence to ImmutableNGramDictionary");
 	}
@@ -51,7 +53,7 @@ public class ImmutableNGramLM extends AbstractNGramLM {
 	 * @see uk.ac.ed.inf.ngram.AbstractNGramDictionary#cutoffRare(int)
 	 */
 	@Override
-	public void cutoffRare(int threshold) {
+	public void cutoffRare(final int threshold) {
 		throw new UnsupportedOperationException(
 				"Cannot perform cutoff to ImmutableNGramDictionary");
 
@@ -63,20 +65,27 @@ public class ImmutableNGramLM extends AbstractNGramLM {
 	}
 
 	@Override
-	public double getProbabilityFor(NGram<String> ngram) {
+	public double getProbabilityFor(final NGram<String> ngram) {
 		return getMLProbabilityFor(ngram, false);
 	}
 
 	@Override
-	public void trainIncrementalModel(Collection<File> fromAllFilesInFolder)
-			throws IOException {
+	protected void removeNgram(final NGram<String> ngram) {
+		throw new UnsupportedOperationException(
+				"Cannot remove ngram from ImmutableNGramDictionary");
+
+	}
+
+	@Override
+	public void trainIncrementalModel(
+			final Collection<File> fromAllFilesInFolder) throws IOException {
 		throw new UnsupportedOperationException(
 				"Cannot add sentence to ImmutableNGramDictionary");
 
 	}
 
 	@Override
-	public void trainModel(Collection<File> fromAllFilesInFolder)
+	public void trainModel(final Collection<File> fromAllFilesInFolder)
 			throws IOException {
 		throw new UnsupportedOperationException(
 				"Cannot add sentence to ImmutableNGramDictionary");

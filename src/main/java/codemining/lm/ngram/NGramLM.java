@@ -122,14 +122,14 @@ public class NGramLM extends AbstractNGramLM {
 			final NGram<String> ngram = NGram.constructNgramAt(i, sentence,
 					getN());
 			if (ngram.size() > 1) {
-				addNgramToDict(ngram, addNewToks);
+				addNgram(ngram, addNewToks);
 			}
 		}
 
 		for (int i = sentence.size() - getN() + 1; i < sentence.size(); i++) {
 			final NGram<String> ngram = NGram.constructNgramAt(
 					sentence.size() - 1, sentence, sentence.size() - i);
-			addNgramToDict(ngram, addNewToks);
+			addNgram(ngram, addNewToks);
 		}
 	}
 
@@ -140,8 +140,7 @@ public class NGramLM extends AbstractNGramLM {
 	 * @param ngram
 	 */
 	@Override
-	public void addNgramToDict(final NGram<String> ngram,
-			final boolean addNewVoc) {
+	public void addNgram(final NGram<String> ngram, final boolean addNewVoc) {
 		checkArgument(ngram.size() > 0 && ngram.size() <= getN(),
 				"Adding a n-gram of size %s but we have a %s-gram",
 				ngram.size(), getN());
@@ -179,6 +178,14 @@ public class NGramLM extends AbstractNGramLM {
 	@Override
 	public double getProbabilityFor(final NGram<String> ngram) {
 		return getMLProbabilityFor(ngram, false);
+	}
+
+	@Override
+	protected void removeNgram(final NGram<String> ngram) {
+		checkArgument(ngram.size() > 0 && ngram.size() <= getN(),
+				"Removing a n-gram of size %s but we have a %s-gram",
+				ngram.size(), getN());
+		trie.remove(ngram);
 	}
 
 	@Override

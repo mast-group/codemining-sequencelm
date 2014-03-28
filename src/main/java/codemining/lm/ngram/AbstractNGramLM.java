@@ -115,7 +115,7 @@ public abstract class AbstractNGramLM implements
 	public abstract void addFromSentence(final List<String> sentence,
 			boolean addNewVoc);
 
-	protected abstract void addNgramToDict(final NGram<String> ngram,
+	protected abstract void addNgram(final NGram<String> ngram,
 			final boolean addNewVoc);
 
 	public abstract void addSentences(
@@ -401,6 +401,11 @@ public abstract class AbstractNGramLM implements
 		throw new IllegalStateException(
 				"Should never reach this point. Picking random production failed.");
 	}
+
+	/**
+	 * Remove the n-gram from the LM.
+	 */
+	protected abstract void removeNgram(final NGram<String> ngram);
 
 	public void serializeToDisk(final String filename)
 			throws SerializationException {

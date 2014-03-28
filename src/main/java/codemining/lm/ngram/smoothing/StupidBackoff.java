@@ -34,31 +34,32 @@ public class StupidBackoff extends AbstractNGramLM {
 		super();
 	}
 
-	public StupidBackoff(AbstractNGramLM original) {
+	public StupidBackoff(final AbstractNGramLM original) {
 		super(original);
 	}
 
 	@Override
-	public void addFromSentence(List<String> sentence, boolean addNewVoc) {
+	public void addFromSentence(final List<String> sentence,
+			final boolean addNewVoc) {
 		throw new UnsupportedOperationException(
 				"StupidBackoff is an immutable Language Model");
 	}
 
 	@Override
-	protected void addNgramToDict(NGram<String> ngram, boolean addNewVoc) {
+	protected void addNgram(final NGram<String> ngram, final boolean addNewVoc) {
 		throw new UnsupportedOperationException(
 				"StupidBackoff is an immutable Language Model");
 	}
 
 	@Override
-	public void addSentences(Collection<List<String>> sentenceSet,
-			boolean addNewVocabulary) {
+	public void addSentences(final Collection<List<String>> sentenceSet,
+			final boolean addNewVocabulary) {
 		throw new UnsupportedOperationException(
 				"StupidBackoff is an immutable Language Model");
 	}
 
 	@Override
-	public void cutoffRare(int threshold) {
+	public void cutoffRare(final int threshold) {
 		throw new UnsupportedOperationException(
 				"StupidBackoff is an immutable Language Model");
 	}
@@ -98,7 +99,13 @@ public class StupidBackoff extends AbstractNGramLM {
 	}
 
 	@Override
-	public void trainIncrementalModel(Collection<File> files)
+	protected void removeNgram(final NGram<String> ngram) {
+		throw new UnsupportedOperationException(
+				"StupidBackoff is an immutable Language Model");
+	}
+
+	@Override
+	public void trainIncrementalModel(final Collection<File> files)
 			throws IOException {
 		throw new UnsupportedOperationException(
 				"StupidBackoff is an immutable Language Model");
@@ -106,7 +113,7 @@ public class StupidBackoff extends AbstractNGramLM {
 	}
 
 	@Override
-	public void trainModel(Collection<File> files) throws IOException {
+	public void trainModel(final Collection<File> files) throws IOException {
 		throw new UnsupportedOperationException(
 				"StupidBackoff is an immutable Language Model");
 	}
