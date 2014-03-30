@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import codemining.languagetools.ITokenizer;
@@ -45,10 +44,8 @@ public class TokenVocabularyBuilder {
 		public void run() {
 			LOGGER.finer("Reading file " + codeFile.getAbsolutePath());
 			try {
-				final char[] code = FileUtils.readFileToString(codeFile)
-						.toCharArray();
-				vocabularySet.addAll(tokenizer.tokenListFromCode(code));
-			} catch (IOException e) {
+				vocabularySet.addAll(tokenizer.tokenListFromCode(codeFile));
+			} catch (final IOException e) {
 				LOGGER.warning(ExceptionUtils.getFullStackTrace(e));
 			}
 		}
