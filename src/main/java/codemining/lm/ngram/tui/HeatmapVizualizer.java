@@ -13,7 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import codemining.java.codeutils.JavaCodePrinter;
+import codemining.languagetools.CodePrinter;
 import codemining.languagetools.ColoredToken;
 import codemining.languagetools.ITokenizer;
 import codemining.lm.ngram.AbstractNGramLM;
@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
  * @author Miltos Allamanis <m.allamanis@ed.ac.uk>
  * 
  */
-public class HeatmapVizualizer extends JavaCodePrinter {
+public class HeatmapVizualizer extends CodePrinter {
 
 	private static final Logger LOGGER = Logger
 			.getLogger(HeatmapVizualizer.class.getName());
