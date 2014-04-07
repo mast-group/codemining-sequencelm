@@ -52,7 +52,7 @@ public class HeatmapVizualizer extends CodePrinter {
 			try {
 				final List<ColoredToken> coloredTokens = visualizer
 						.colorTokens(lm, f);
-				visualizer.writeHTMLwithColors(coloredTokens, f); // TODO write
+				visualizer.getHTMLwithColors(coloredTokens, f); // TODO write
 																	// it
 																	// somewhere
 																	// (get
