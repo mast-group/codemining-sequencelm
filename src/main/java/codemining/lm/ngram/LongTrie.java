@@ -41,6 +41,7 @@ public class LongTrie<K> extends Trie<Long> {
 		alphabet = HashBiMap.create();
 		unkSymbolId = nextId;
 		unkSymbol = unk;
+		alphabet.put(unk, unkSymbolId);
 		nextId++;
 	}
 

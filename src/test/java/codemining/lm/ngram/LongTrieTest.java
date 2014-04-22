@@ -102,7 +102,7 @@ public class LongTrieTest {
 
 		testTrie.buildVocabularySymbols(words);
 
-		assertEquals(testTrie.getVocabulary().size(), words.size());
+		assertEquals(testTrie.getVocabulary().size(), words.size() + 1);
 		assertTrue(testTrie.isUNK("l"));
 		assertFalse(testTrie.isUNK("a"));
 		assertFalse(testTrie.isUNK("c"));
