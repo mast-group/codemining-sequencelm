@@ -181,7 +181,7 @@ public class NGramLM extends AbstractNGramLM {
 	}
 
 	@Override
-	protected void removeNgram(final NGram<String> ngram) {
+	public void removeNgram(final NGram<String> ngram) {
 		checkArgument(ngram.size() > 0 && ngram.size() <= getN(),
 				"Removing a n-gram of size %s but we have a %s-gram",
 				ngram.size(), getN());
