@@ -405,7 +405,7 @@ public abstract class AbstractNGramLM implements
 	/**
 	 * Remove the n-gram from the LM.
 	 */
-	protected abstract void removeNgram(final NGram<String> ngram);
+	public abstract void removeNgram(final NGram<String> ngram);
 
 	public void serializeToDisk(final String filename)
 			throws SerializationException {

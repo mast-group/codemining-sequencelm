@@ -314,7 +314,7 @@ public class KatzBackoff extends AbstractNGramLM {
 	}
 
 	@Override
-	protected void removeNgram(final NGram<String> ngram) {
+	public void removeNgram(final NGram<String> ngram) {
 		throw new UnsupportedOperationException(
 				"KatzSmoother is an immutable Language Model");
 	}

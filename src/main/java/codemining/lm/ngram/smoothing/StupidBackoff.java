@@ -99,7 +99,7 @@ public class StupidBackoff extends AbstractNGramLM {
 	}
 
 	@Override
-	protected void removeNgram(final NGram<String> ngram) {
+	public void removeNgram(final NGram<String> ngram) {
 		throw new UnsupportedOperationException(
 				"StupidBackoff is an immutable Language Model");
 	}

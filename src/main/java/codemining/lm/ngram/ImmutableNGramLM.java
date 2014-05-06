@@ -33,8 +33,7 @@ public class ImmutableNGramLM extends AbstractNGramLM {
 	}
 
 	@Override
-	protected void addNgram(final NGram<String> ngram,
-			final boolean addNewVoc) {
+	protected void addNgram(final NGram<String> ngram, final boolean addNewVoc) {
 		throw new UnsupportedOperationException(
 				"Cannot add ngram to ImmutableNGramDictionary");
 
@@ -70,7 +69,7 @@ public class ImmutableNGramLM extends AbstractNGramLM {
 	}
 
 	@Override
-	protected void removeNgram(final NGram<String> ngram) {
+	public void removeNgram(final NGram<String> ngram) {
 		throw new UnsupportedOperationException(
 				"Cannot remove ngram from ImmutableNGramDictionary");
 
