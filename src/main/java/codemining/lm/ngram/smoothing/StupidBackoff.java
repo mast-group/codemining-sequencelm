@@ -84,7 +84,7 @@ public class StupidBackoff extends AbstractNGramLM {
 
 		if (thisNgramCount > 0) {
 			final long productionCount = trie.getCount(ngram.getPrefix(),
-					ngram.size() == 0, false);
+					ngram.size() == 1, false);
 			checkArgument(productionCount >= thisNgramCount);
 
 			final double mlProb = ((double) thisNgramCount)
