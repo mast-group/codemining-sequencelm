@@ -8,12 +8,14 @@ import java.util.List;
 import codemining.lm.ILanguageModel;
 import codemining.lm.ngram.AbstractNGramLM;
 import codemining.lm.ngram.NGram;
+import codemining.util.SettingsLoader;
 
 public class LaplaceSmoother extends AbstractNGramLM {
 
 	private static final long serialVersionUID = -5288476873430715713L;
 
-	private final double countIncrement = 1;
+	private static final double COUNT_INCREMENT = (int) SettingsLoader
+			.getNumericSetting("countIncrement", 1);
 
 	public LaplaceSmoother(final AbstractNGramLM original) {
 		super(original);
@@ -57,8 +59,8 @@ public class LaplaceSmoother extends AbstractNGramLM {
 		final long productionCount = trie.getCount(ngram.getPrefix(), false,
 				false);
 
-		return (ngramCount + countIncrement)
-				/ (productionCount + countIncrement
+		return (ngramCount + COUNT_INCREMENT)
+				/ (productionCount + COUNT_INCREMENT
 						* trie.getRoot().prods.size());
 
 	}

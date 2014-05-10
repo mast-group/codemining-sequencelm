@@ -34,13 +34,15 @@ import com.google.common.collect.Multiset;
 import com.google.common.math.DoubleMath;
 
 /**
+ * A cache n-gram model that caches only on identifiers.
+ * 
  * @author Miltos Allamanis <m.allamanis@ed.ac.uk>
  * 
  */
 public class IdentifierOnlyCachedNGramLM implements
 		ITokenGeneratingLanguageModel<FullToken> {
 
-	class IdentifierOnlyCachedNGramLMDataExtractor extends
+	static class IdentifierOnlyCachedNGramLMDataExtractor extends
 			IdentifierOnlyCachedNGramLM {
 
 		private static final long serialVersionUID = 3047560629014010487L;
