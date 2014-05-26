@@ -180,9 +180,9 @@ public abstract class AbstractNGramLM implements
 		for (final Multiset.Entry<NGram<String>> ngramEntry : ngrams.entrySet()) {
 			final NGram<String> ngram = ngramEntry.getElement();
 
-			final Set<String> renamings = checkNotNull(getAlternativesForNGram(
+			final Set<String> alternatives = checkNotNull(getAlternativesForNGram(
 					globalTrie, ngram, tokenToSubstitute));
-			namings.addAll(renamings);
+			namings.addAll(alternatives);
 		}
 
 		return namings;
