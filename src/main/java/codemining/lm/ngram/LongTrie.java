@@ -3,7 +3,10 @@
  */
 package codemining.lm.ngram;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,6 +20,7 @@ import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * An trie of K, with an alphabet of longs
@@ -102,6 +106,25 @@ public class LongTrie<K> implements Serializable {
 
 	public void cutoffRare(final int threshold) {
 		baseTrie.cutoffRare(threshold);
+
+		// Now scan everything and remove unwanted symbols from vocabulary.
+		final Set<Long> usedSymbols = Sets.newTreeSet();
+		final ArrayDeque<TrieNode<Long>> stack = new ArrayDeque<TrieNode<Long>>();
+		stack.push(baseTrie.getRoot());
+
+		while (!stack.isEmpty()) {
+			final TrieNode<Long> node = stack.pop();
+			usedSymbols.addAll(node.prods.keySet());
+			for (final TrieNode<Long> childNode : node.prods.values()) {
+				stack.push(childNode);
+			}
+		}
+
+		final List<Long> difference = Lists.newArrayList(Sets.difference(
+				alphabet.values(), usedSymbols));
+		for (final long keyToRemove : difference) {
+			checkNotNull(alphabet.inverse().remove(keyToRemove));
+		}
 	}
 
 	/**
@@ -162,6 +185,16 @@ public class LongTrie<K> implements Serializable {
 
 	public TrieNode<Long> getRoot() {
 		return baseTrie.getRoot();
+	}
+
+	public Set<K> getRootSymbols() {
+		final Set<K> rootProductions = Sets.newHashSet();
+		final TrieNode<Long> rootNode = baseTrie.getRoot();
+		for (final long symbolId : rootNode.prods.keySet()) {
+			rootProductions.add(getSymbolFromKey(symbolId));
+		}
+
+		return rootProductions;
 	}
 
 	/**

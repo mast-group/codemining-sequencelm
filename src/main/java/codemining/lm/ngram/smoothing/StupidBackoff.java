@@ -30,10 +30,6 @@ public class StupidBackoff extends AbstractNGramLM {
 	private static final Logger LOGGER = Logger.getLogger(StupidBackoff.class
 			.getName());
 
-	private StupidBackoff() {
-		super();
-	}
-
 	public StupidBackoff(final AbstractNGramLM original) {
 		super(original);
 	}
