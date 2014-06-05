@@ -3,11 +3,14 @@
  */
 package codemining.lm.ngram;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+
+import codemining.lm.ngram.Trie.TrieNode;
 
 import com.esotericsoftware.kryo.DefaultSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
@@ -22,7 +25,9 @@ import com.google.common.collect.Lists;
  * 
  */
 @DefaultSerializer(JavaSerializer.class)
-public class LongTrie<K> extends Trie<Long> {
+public class LongTrie<K> implements Serializable {
+
+	private final Trie<Long> baseTrie = new Trie<Long>(null);
 
 	private static final long serialVersionUID = -7194495381473625925L;
 
@@ -36,12 +41,11 @@ public class LongTrie<K> extends Trie<Long> {
 	private final K unkSymbol;
 
 	public LongTrie(final K unk) {
-		super(null);
 		nextId = Long.MIN_VALUE;
 		alphabet = HashBiMap.create();
-		unkSymbolId = nextId;
+		baseTrie.unkSymbolId = nextId;
 		unkSymbol = unk;
-		alphabet.put(unk, unkSymbolId);
+		alphabet.put(unk, baseTrie.unkSymbolId);
 		nextId++;
 	}
 
@@ -57,11 +61,11 @@ public class LongTrie<K> extends Trie<Long> {
 			// replace with unks
 			for (int i = 0; i < keys.size(); i++) {
 				if (keys.get(i) == null) {
-					keys.set(i, this.getUnkSymbolId());
+					keys.set(i, baseTrie.getUnkSymbolId());
 				}
 			}
 		}
-		add(keys);
+		baseTrie.add(keys);
 	}
 
 	private synchronized long addSymbolId(final K element) {
@@ -92,7 +96,12 @@ public class LongTrie<K> extends Trie<Long> {
 	 */
 	public long countDistinctStartingWith(final NGram<K> ngram,
 			final boolean useUNKs) {
-		return countDistinctStartingWith(getSymbolIds(ngram, false), useUNKs);
+		return baseTrie.countDistinctStartingWith(getSymbolIds(ngram, false),
+				useUNKs);
+	}
+
+	public void cutoffRare(final int threshold) {
+		baseTrie.cutoffRare(threshold);
 	}
 
 	/**
@@ -105,18 +114,20 @@ public class LongTrie<K> extends Trie<Long> {
 	 */
 	public long getCount(final NGram<K> ngram, final boolean useUNKs,
 			final boolean useTerminals) {
-		return getCount(getSymbolIds(ngram, false), useUNKs, useTerminals);
+		return baseTrie.getCount(getSymbolIds(ngram, false), useUNKs,
+				useTerminals);
 	}
 
 	public TrieNode<Long> getNGramNodeForInput(final NGram<K> ngram,
 			final boolean useUNKs) {
-		return this.getTrieNodeForInput(getSymbolIds(ngram, false), useUNKs);
+		return baseTrie
+				.getTrieNodeForInput(getSymbolIds(ngram, false), useUNKs);
 	}
 
 	public TrieNode<Long> getNGramNodeForInput(final NGram<K> ngram,
 			final boolean useUNKs, final TrieNode<Long> fromNode) {
-		return this.getTrieNodeForInput(getSymbolIds(ngram, false), useUNKs,
-				fromNode);
+		return baseTrie.getTrieNodeForInput(getSymbolIds(ngram, false),
+				useUNKs, fromNode);
 	}
 
 	/**
@@ -126,7 +137,7 @@ public class LongTrie<K> extends Trie<Long> {
 	 * @return
 	 */
 	public Map<K, Long> getPossibleProductionsWithCounts(final NGram<K> prefix) {
-		final TrieNode<Long> node = getTrieNodeForInput(
+		final TrieNode<Long> node = baseTrie.getTrieNodeForInput(
 				getSymbolIds(prefix, false), false);
 
 		final Map<K, Long> productions = new TreeMap<K, Long>();
@@ -149,6 +160,10 @@ public class LongTrie<K> extends Trie<Long> {
 		return productions;
 	}
 
+	public TrieNode<Long> getRoot() {
+		return baseTrie.getRoot();
+	}
+
 	/**
 	 * Return the symbol from the key.
 	 * 
@@ -156,7 +171,7 @@ public class LongTrie<K> extends Trie<Long> {
 	 * @return
 	 */
 	public K getSymbolFromKey(final Long key) {
-		if (key.equals(unkSymbolId)) {
+		if (key.equals(baseTrie.unkSymbolId)) {
 			return unkSymbol;
 		}
 		return alphabet.inverse().get(key);
@@ -185,6 +200,10 @@ public class LongTrie<K> extends Trie<Long> {
 		return symbols;
 	}
 
+	public Long getUnkSymbolId() {
+		return baseTrie.getUnkSymbolId();
+	}
+
 	public Set<K> getVocabulary() {
 		return alphabet.keySet();
 	}
@@ -204,11 +223,11 @@ public class LongTrie<K> extends Trie<Long> {
 		// replace nulls with unks
 		for (int i = 0; i < keys.size(); i++) {
 			if (keys.get(i) == null) {
-				keys.set(i, this.getUnkSymbolId());
+				keys.set(i, baseTrie.getUnkSymbolId());
 			}
 		}
 
-		remove(keys);
+		baseTrie.remove(keys);
 	}
 
 	/**
@@ -221,8 +240,8 @@ public class LongTrie<K> extends Trie<Long> {
 		final List<K> ngramCopy = Lists.newArrayList();
 		for (final K gram : ngram) {
 			final Long key = alphabet.get(gram);
-			if (key == null || !getRoot().prods.containsKey(key)) {
-				ngramCopy.add(alphabet.inverse().get(unkSymbolId));
+			if (key == null || !baseTrie.getRoot().prods.containsKey(key)) {
+				ngramCopy.add(alphabet.inverse().get(baseTrie.unkSymbolId));
 			} else {
 				ngramCopy.add(gram);
 			}
@@ -238,21 +257,21 @@ public class LongTrie<K> extends Trie<Long> {
 	 * @return
 	 */
 	public long sumStartingWith(final NGram<K> ngram, final boolean useUNKs) {
-		return sumStartingWith(getSymbolIds(ngram, false), useUNKs);
+		return baseTrie.sumStartingWith(getSymbolIds(ngram, false), useUNKs);
 	}
 
 	@Override
 	public String toString() {
 		final StringBuffer buf = new StringBuffer();
 		buf.append('[');
-		for (final Entry<Long, TrieNode<Long>> ngramEntry : getRoot().prods
+		for (final Entry<Long, TrieNode<Long>> ngramEntry : baseTrie.getRoot().prods
 				.entrySet()) {
 			final Long ngram = ngramEntry.getKey();
 			final List<String> prods = Lists.newArrayList();
 			toStringHelper(alphabet.inverse().get(ngram).toString(),
 					ngramEntry.getValue(), prods);
 			for (final String prod : prods) {
-				buf.append(prod + '\n');
+				buf.append(prod + System.lineSeparator());
 			}
 		}
 		buf.append(']');

@@ -365,10 +365,6 @@ public abstract class AbstractNGramLM implements
 		return trie;
 	}
 
-	public final TrieNode<Long> getTrieRoot() {
-		return trie.getRoot();
-	}
-
 	public final Long getUNKSymbolId() {
 		return trie.getUnkSymbolId();
 	}
