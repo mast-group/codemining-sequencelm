@@ -347,6 +347,13 @@ public abstract class AbstractNGramLM implements
 		return nGramSize;
 	}
 
+	/**
+	 * Return the (possibly smoothed) probability of an n-gram for this language
+	 * model.
+	 * 
+	 * @param ngram
+	 * @return
+	 */
 	public abstract double getProbabilityFor(final NGram<String> ngram);
 
 	@Override
