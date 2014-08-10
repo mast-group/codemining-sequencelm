@@ -15,13 +15,13 @@ import codemining.lm.ngram.NGram;
 
 /**
  * The stupid backoff as in the following paper:
- * 
+ *
  * inproceedings{brants2007large, title={Large language models in machine
  * translation}, author={Brants, T. and Popat, A.C. and Xu, P. and Och, F.J. and
  * Dean, J.}, booktitle={In EMNLP}, year={2007}, organization={Citeseer} }
- * 
+ *
  * @author Miltos Allamanis <m.allamanis@ed.ac.uk>
- * 
+ *
  */
 public class StupidBackoff extends AbstractNGramLM {
 
@@ -68,7 +68,7 @@ public class StupidBackoff extends AbstractNGramLM {
 	/**
 	 * Get the probability using the ngram. It assumes that the last word w_i
 	 * exists in the dictionary (or has been converted to UNK).
-	 * 
+	 *
 	 * @param ngram
 	 * @return
 	 */
