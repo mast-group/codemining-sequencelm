@@ -75,7 +75,9 @@ public class StupidBackoff extends AbstractNGramLM {
 	@Override
 	public double getProbabilityFor(NGram<String> ngram) {
 		checkNotNull(ngram);
-		ngram = trie.substituteWordsToUNK(ngram);
+		if (ngram.size() == 1) {
+			ngram = trie.substituteWordsToUNK(ngram);
+		}
 		final long thisNgramCount = trie.getCount(ngram, ngram.size() == 1,
 				true);
 
