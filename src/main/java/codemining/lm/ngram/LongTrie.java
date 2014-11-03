@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package codemining.lm.ngram;
 
@@ -24,9 +24,9 @@ import com.google.common.collect.Sets;
 
 /**
  * An trie of K, with an alphabet of longs
- * 
+ *
  * @author Miltos Allamanis<m.allamanis@ed.ac.uk>
- * 
+ *
  */
 @DefaultSerializer(JavaSerializer.class)
 public class LongTrie<K> implements Serializable {
@@ -56,7 +56,7 @@ public class LongTrie<K> implements Serializable {
 	/**
 	 * Add an n-gram to the trie. If parts of the ngram do not exist in the
 	 * dictionary, introduce them
-	 * 
+	 *
 	 * @param ngram
 	 */
 	public void add(final NGram<K> ngram, final boolean introduceVoc) {
@@ -81,7 +81,7 @@ public class LongTrie<K> implements Serializable {
 	/**
 	 * Create symbols for all the given tokens. Useful when building the
 	 * vocabulary first.
-	 * 
+	 *
 	 * @param words
 	 *            a collection of words
 	 */
@@ -93,7 +93,7 @@ public class LongTrie<K> implements Serializable {
 
 	/**
 	 * Return N_{1+}(ngram,*)
-	 * 
+	 *
 	 * @param ngram
 	 * @param useUNKs
 	 * @return
@@ -123,6 +123,9 @@ public class LongTrie<K> implements Serializable {
 		final List<Long> difference = Lists.newArrayList(Sets.difference(
 				alphabet.values(), usedSymbols));
 		for (final long keyToRemove : difference) {
+			if (keyToRemove == getUnkSymbolId()) {
+				continue;
+			}
 			checkNotNull(alphabet.inverse().remove(keyToRemove));
 		}
 	}
@@ -131,7 +134,7 @@ public class LongTrie<K> implements Serializable {
 	 * Returns the count of the n-gram in the dictionary. If a token does not
 	 * exist in the dictionary then it is replaced with UNK. If UNKs do not
 	 * exist at the current point then 0 is returned.
-	 * 
+	 *
 	 * @param ngram
 	 * @return
 	 */
@@ -155,7 +158,7 @@ public class LongTrie<K> implements Serializable {
 
 	/**
 	 * Return all the possible productions from a specific prefix.
-	 * 
+	 *
 	 * @param prefix
 	 * @return
 	 */
@@ -199,7 +202,7 @@ public class LongTrie<K> implements Serializable {
 
 	/**
 	 * Return the symbol from the key.
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -212,7 +215,7 @@ public class LongTrie<K> implements Serializable {
 
 	/**
 	 * Helper function to create symbol IDs from list.
-	 * 
+	 *
 	 * @param objectList
 	 * @param createIfNotFoundK
 	 * @return
@@ -247,7 +250,7 @@ public class LongTrie<K> implements Serializable {
 
 	/**
 	 * Remove an n-gram from the trie. The n-gram must exist.
-	 * 
+	 *
 	 * @param ngram
 	 */
 	public void remove(final NGram<K> ngram) {
@@ -266,14 +269,14 @@ public class LongTrie<K> implements Serializable {
 	/**
 	 * Substitute all the tokens in the current ngram with UNK when they do not
 	 * exist in the dictionary.
-	 * 
+	 *
 	 * @param ngram
 	 */
-	protected NGram<K> substituteWordsToUNK(final NGram<K> ngram) {
+	public NGram<K> substituteWordsToUNK(final NGram<K> ngram) {
 		final List<K> ngramCopy = Lists.newArrayList();
 		for (final K gram : ngram) {
 			final Long key = alphabet.get(gram);
-			if (key == null || !baseTrie.getRoot().prods.containsKey(key)) {
+			if (key == null) {
 				ngramCopy.add(alphabet.inverse().get(baseTrie.unkSymbolId));
 			} else {
 				ngramCopy.add(gram);
@@ -284,7 +287,7 @@ public class LongTrie<K> implements Serializable {
 
 	/**
 	 * Return c_(ngram,*)
-	 * 
+	 *
 	 * @param ngram
 	 * @param useUNKs
 	 * @return
@@ -313,7 +316,7 @@ public class LongTrie<K> implements Serializable {
 
 	/**
 	 * Helper function to convert dictionary to string.
-	 * 
+	 *
 	 * @param currentString
 	 * @param currentUnit
 	 * @param productions
